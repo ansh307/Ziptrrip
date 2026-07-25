@@ -39,7 +39,7 @@ const updateTodo = async (todoId, updateData) => {
   }
 
   const todo = await Todo.findByIdAndUpdate(todoId, updateData, {
-    new: true,
+    returnDocument: "after",
     runValidators: true,
   });
 
