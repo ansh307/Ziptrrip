@@ -1,120 +1,221 @@
-# Todo Application
+# ✅ Todo Application
 
-A full-stack Todo Application built as part of the coding challenge.
-
-## Tech Stack
-
-### Frontend
-
-- React
-- React Router
-- CSS
-
-### Backend
-
-- Node.js
-- Express.js
-
-### Data Storage
-
-- MongoDB Database
+A basic simple full-stack Todo Application built as part of a coding challenge. The application allows users to create, manage, update, and delete todos with a clean, responsive React frontend and a RESTful Express.js backend powered by MongoDB.
 
 ---
 
-# Project Structure
+# 🚀 Live Demo
+
+### Frontend
+
+https://ziptrrip-bice.vercel.app/todos
+
+### Backend API
+
+https://ziptrrip-backend.vercel.app/api/v1/todo/
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+- React
+- React Router
+- Vite
+- Tailwind CSS
+- Axios
+
+## Backend
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- CORS
+- dotenv
+
+---
+
+# 📂 Project Structure
 
 ```text
-todo-app/
-├── frontend/
-├── backend/
+ZIPTRIP/
+├── Backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── services/
+│   ├── config/
+│   ├── server.js
+│   └── package.json
+│
+├── Frontend/
+│   ├── src/
+│   ├── public/
+│   ├── vite.config.js
+│   └── package.json
+│
 ├── docs/
+│   ├── API.md
+│   ├── FRONTEND.md
+│   └── SETUP.md
+│
 └── README.md
 ```
 
 ---
 
-# Features
+# ✨ Features
 
-## Todo List Page
+## Todo List
 
 - View all todos
 - Create a new todo
-- Edit an existing todo
-- Delete a todo
-- Mark todo as completed
-- Search todos _(Optional)_
-- Filter todos _(Optional)_
+- Edit existing todos
+- Delete todos
+- Mark todos as completed
+- Responsive UI
+- Real-time API integration
 
-## Todo Details Page
+## Todo Details
 
-- Displays details for a single todo
-- Receives the todo ID as a query parameter
-
-Example:
-
-```
-/todo?id=1
-```
-
-The page displays:
-
-- Title
-- Description
-- Status
-- Created Date
-- Last Updated Date
+- View complete information for a single todo
+- Dynamic route using Todo ID
+- Displays:
+  - Title
+  - Description
+  - Completion Status
+  - Created Date
+  - Last Updated Date
 
 ---
 
-# Backend API
+# 📡 REST API
 
-## Todos
+Base URL
 
-| Method | Endpoint     | Description    |
-| ------ | ------------ | -------------- |
-| GET    | `/todos`     | Get all todos  |
-| GET    | `/todos/:id` | Get todo by ID |
-| POST   | `/todos`     | Create todo    |
-| PUT    | `/todos/:id` | Update todo    |
-| DELETE | `/todos/:id` | Delete todo    |
+```
+https://ziptrrip-backend.vercel.app/api/v1/todo
+```
+
+| Method | Endpoint | Description       |
+| ------ | -------- | ----------------- |
+| GET    | `/`      | Get all todos     |
+| GET    | `/:id`   | Get a todo by ID  |
+| POST   | `/`      | Create a new todo |
+| PUT    | `/:id`   | Update a todo     |
+| DELETE | `/:id`   | Delete a todo     |
 
 ---
 
-# Running the Project
+# ⚙️ Getting Started
 
-## Backend
+## 1. Clone the Repository
 
 ```bash
-cd backend
+git clone https://github.com/ansh307/ziptrip.git
+cd ZIPTRIP
+```
+
+---
+
+## 2. Backend Setup
+
+```bash
+cd Backend
 npm install
+```
+
+Create a `.env` file inside the Backend folder.
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+```
+
+Run the backend:
+
+```bash
 npm run dev
 ```
 
-## Frontend
+---
+
+## 3. Frontend Setup
 
 ```bash
-cd frontend
+cd Frontend
 npm install
+```
+
+Create a `.env` file.
+
+```env
+VITE_API_URL=http://localhost:5000/api/v1/todo
+```
+
+Run the frontend:
+
+```bash
 npm run dev
 ```
 
 ---
 
-# Documentation
+# 🌐 Deployment
 
-Additional documentation can be found inside the `docs/` directory.
+| Service  | URL                                              |
+| -------- | ------------------------------------------------ |
+| Frontend | https://ziptrrip-bice.vercel.app/todos           |
+| Backend  | https://ziptrrip-backend.vercel.app/api/v1/todo/ |
 
-Example:
+---
 
-```
+# 📚 Documentation
+
+Detailed project documentation is available in the **docs/** directory.
+
+```text
 docs/
 ├── API.md
-├── FEATURES.md
+├── BACKEND.md
 └── SETUP.md
+
+and
+
+~/README.md
 ```
 
 ---
 
-# Status
+# 🎯 Challenge Requirements
 
-🚧 Work in Progress
+- ✅ Multiple-page React application
+- ✅ Todo List page
+- ✅ Single Todo Details page
+- ✅ Full CRUD functionality
+- ✅ RESTful API
+- ✅ MongoDB integration
+- ✅ Responsive UI
+- ✅ Proper project documentation
+
+---
+
+# 📸 Screenshots
+
+Example:
+
+```markdown
+![Todo List](docs/images/todo-list.png)
+
+![Todo Details](docs/images/todo-details.png)
+```
+
+---
+
+# 👨‍💻 Author
+
+**Ansh Soni**
+
+GitHub: https://github.com/ansh307
