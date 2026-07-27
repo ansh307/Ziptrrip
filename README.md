@@ -66,7 +66,7 @@ ZIPTRIP/
 
 ---
 
-# ✨ Features
+# Features
 
 ## Todo List
 
