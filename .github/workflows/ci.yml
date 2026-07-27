@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: |
+            Frontend/package-lock.json
+            Backend/package-lock.json
 
       ####################################################
       # Frontend
@@ -55,6 +58,9 @@ jobs:
       ####################################################
       # Docker
       ####################################################
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Build Frontend Docker Image
         run: |
