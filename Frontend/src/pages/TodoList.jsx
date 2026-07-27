@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
@@ -31,6 +31,7 @@ const TodoList = () => {
         completed: !completed,
       });
 
+      console.log(res.data.data);
       setTodos((prev) =>
         prev.map((todo) =>
           todo._id === id ? { ...todo, completed: !todo.completed } : todo,
@@ -45,9 +46,10 @@ const TodoList = () => {
     try {
       const res = await axios.delete(`${API_URL}/delete-todo/${id}`);
 
+      console.log(res.data.data);
       // setTodos((prev) => prev.filter((todo) => todo._id !== id));
     } catch (error) {
-      console.error(err);
+      console.error(error);
     }
   };
 

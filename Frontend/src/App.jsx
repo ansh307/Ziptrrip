@@ -1,4 +1,3 @@
-import React from 'react'
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import TodoList from './pages/TodoList';
 import TodoDetail from './pages/TodoDetail';

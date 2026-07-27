@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
@@ -75,10 +75,10 @@ const TodoDetail = () => {
     const handleDelete = async (id) => {
     try {
       const res = await axios.delete(`${API_URL}/delete-todo/${id}`);
-
+      console.log(res.data);
       navigate("/todos");
     } catch (error) {
-      console.error(err);
+      console.error(error);
     }
   };
   return (
