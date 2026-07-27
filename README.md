@@ -163,7 +163,7 @@ npm run dev
 
 ---
 
-# 🌐 Deployment
+# Deployment
 
 | Service  | URL                                              |
 | -------- | ------------------------------------------------ |
@@ -172,7 +172,7 @@ npm run dev
 
 ---
 
-# 📚 Documentation
+# Documentation
 
 Detailed project documentation is available in the **docs/** directory.
 
@@ -189,7 +189,7 @@ and
 
 ---
 
-# 🎯 Challenge Requirements
+# Challenge Requirements
 
 - ✅ Multiple-page React application
 - ✅ Todo List page
