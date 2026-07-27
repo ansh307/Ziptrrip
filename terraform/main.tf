@@ -69,7 +69,7 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
-# EC2 Instance
+# EC2 Instance testing
 
 resource "aws_instance" "server" {
   ami                    = data.aws_ami.ubuntu.id
