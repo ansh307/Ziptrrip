@@ -138,7 +138,7 @@ const TodoList = () => {
           </div>
 
           <div className="space-y-6">
-            {todos.length > 0 ? (
+            {todos && todos.length > 0 ? (
               todos.map((todo) => (
                 <div
                   key={todo._id}
