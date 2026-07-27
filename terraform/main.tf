@@ -22,7 +22,7 @@ data "aws_vpc" "default" {
   default = true
 }
 
-# Security Group
+# Security Group for it
 
 resource "aws_security_group" "ec2_sg" {
   name        = "ziptrrip-sg"
