@@ -62,6 +62,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      ####################################################
+      # Docker Build images and push to Docker hub
+      ####################################################
+
       - name: Build Frontend Docker Image
         run: |
           docker build -t ziptrrip-frontend ./Frontend
@@ -69,3 +79,16 @@ jobs:
       - name: Build Backend Docker Image
         run: |
           docker build -t ziptrrip-backend ./Backend
+
+      - name: Tag Docker Images
+        run: |
+          docker tag ziptrrip-frontend ${{ secrets.DOCKERHUB_USERNAME }}/ziptrrip-frontend:latest
+          docker tag ziptrrip-backend ${{ secrets.DOCKERHUB_USERNAME }}/ziptrrip-backend:latest
+
+      - name: Push Frontend Image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/ziptrrip-frontend:latest
+
+      - name: Push Backend Image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/ziptrrip-backend:latest
