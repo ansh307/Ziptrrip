@@ -191,14 +191,14 @@ and
 
 # Challenge Requirements
 
-- ✅ Multiple-page React application
-- ✅ Todo List page
-- ✅ Single Todo Details page
-- ✅ Full CRUD functionality
-- ✅ RESTful API
-- ✅ MongoDB integration
-- ✅ Responsive UI
-- ✅ Proper project documentation
+-  Multiple-page React application
+-  Todo List page
+-  Single Todo Details page
+-  Full CRUD functionality
+-  RESTful API
+-  MongoDB integration
+-  Responsive UI
+-  Proper project documentation
 
 ---
 
