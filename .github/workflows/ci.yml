@@ -72,9 +72,15 @@ jobs:
       # Docker Build images and push to Docker hub
       ####################################################
 
+      # - name: Build Frontend Docker Image
+      #   run: |
+      #     docker build -t ziptrrip-frontend ./Frontend
+
       - name: Build Frontend Docker Image
         run: |
-          docker build -t ziptrrip-frontend ./Frontend
+          docker build \
+            --build-arg VITE_APP_API_URL=${{ secrets.VITE_APP_API_URL }} \
+            -t ziptrrip-frontend ./Frontend
 
       - name: Build Backend Docker Image
         run: |
