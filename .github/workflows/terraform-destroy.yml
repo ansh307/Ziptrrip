@@ -24,4 +24,4 @@ jobs:
 
       - run: terraform init
 
-      - run: terraform destroy -auto-approve
+      - run: terraform destroy -auto-approve -var="key_name=${{ secrets.EC2_KEY_NAME }}"
