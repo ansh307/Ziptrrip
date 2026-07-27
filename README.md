@@ -1,10 +1,10 @@
-# ✅ Todo Application
+# Todo Application
 
 A basic simple full-stack Todo Application built as part of a coding challenge. The application allows users to create, manage, update, and delete todos with a clean, responsive React frontend and a RESTful Express.js backend powered by MongoDB.
 
 ---
 
-# 🚀 Live Demo
+# Live Demo
 
 ### Frontend
 
