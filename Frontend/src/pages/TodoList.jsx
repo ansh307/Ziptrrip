@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = import.meta.env.VITE_APP_API_URL;
+const API_URL = import.meta.env.VITE_APP_API_URL || "/api/v1/todo";
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
