@@ -166,7 +166,47 @@ jobs:
           exit 1
 
       #################################################
-      # Deploy
+      # Prepare EC2 instance for deployment and install Docker and Docker Compose
+      #################################################
+
+      - name: Prepare EC2
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ steps.terraform.outputs.HOST }}
+          username: ${{ secrets.AWS_USER }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          script: |
+            # Install Docker if it isn't already installed
+            if ! command -v docker >/dev/null 2>&1; then
+              curl -fsSL https://get.docker.com | sh
+              sudo usermod -aG docker $USER
+            fi
+
+            # Install Docker Compose plugin if missing
+            if ! docker compose version >/dev/null 2>&1; then
+              sudo apt-get update
+              sudo apt-get install -y docker-compose-plugin
+            fi
+
+            mkdir -p ~/ziptrrip
+
+      #################################################
+      # Copy Docker Compose File to EC2
+      #################################################
+
+      - name: Copy Docker Compose File
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ steps.terraform.outputs.HOST }}
+          username: ${{ secrets.AWS_USER }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          source: "compose-production.yaml"
+          target: "~/ziptrrip/"
+
+      #################################################
+      # Deploy to EC2
       #################################################
 
       - name: Deploy to EC2
@@ -176,12 +216,18 @@ jobs:
           host: ${{ steps.terraform.outputs.HOST }}
           username: ${{ secrets.AWS_USER }}
           key: ${{ secrets.AWS_SSH_KEY }}
-
           script: |
             cd ~/ziptrrip
 
-            docker compose pull
+            cat > .env <<EOF
+            PORT=${{ secrets.PORT }}
+            MONGODB_URI=${{ secrets.MONGODB_URI }}
+            NODE_ENV=${{ secrets.NODE_ENV }}
+            VITE_APP_API_URL=http://${{ steps.terraform.outputs.HOST }}:${{ secrets.PORT }}/api/v1/todo
+            EOF
 
-            docker compose up -d
+            docker compose -f compose-production.yaml --env-file .env pull
+
+            docker compose -f compose-production.yaml --env-file .env up -d
 
             docker image prune -f
