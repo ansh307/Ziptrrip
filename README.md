@@ -37,7 +37,7 @@ https://ziptrrip-backend.vercel.app/api/v1/todo/
 
 ---
 
-# 📂 Project Structure
+# Project Structure
 
 ```text
 ZIPTRIP/
