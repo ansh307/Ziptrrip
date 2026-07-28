@@ -175,7 +175,7 @@ jobs:
         with:
           host: ${{ steps.terraform.outputs.HOST }}
           username: ${{ secrets.AWS_USER }}
-          key: ${{ secrets.EC2_KEY_NAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
 
           script: |
             cd ~/ziptrrip
