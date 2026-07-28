@@ -11,17 +11,17 @@ const TodoList = () => {
 
   const navigate = useNavigate();
 
-  const fetchTodos = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/all-todos/`);
-      setTodos(res.data.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   useEffect(() => {
-    fetchTodos();
+    async function loadTodos() {
+      try {
+        const res = await axios.get(`${API_URL}/all-todos`);
+        setTodos(res.data.data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadTodos();
   }, []);
 
   const handleToggle = async (id, completed) => {
