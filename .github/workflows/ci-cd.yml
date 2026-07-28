@@ -1,0 +1,187 @@
+name: Ziptrrip CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            Frontend/package-lock.json
+            Backend/package-lock.json
+
+      ####################################################
+      # Frontend
+      ####################################################
+
+      - name: Install Frontend Dependencies
+        working-directory: ./Frontend
+        run: npm ci
+
+      - name: Lint Frontend
+        working-directory: ./Frontend
+        run: npm run lint
+
+      - name: Build Frontend
+        working-directory: ./Frontend
+        run: npm run build
+
+      ####################################################
+      # Backend
+      ####################################################
+
+      - name: Install Backend Dependencies
+        working-directory: ./Backend
+        run: npm ci
+
+      - name: Lint Backend
+        working-directory: ./Backend
+        run: npm run lint --if-present
+
+      ####################################################
+      # Docker
+      ####################################################
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      ####################################################
+      # Docker Build images and push to Docker hub
+      ####################################################
+
+      # - name: Build Frontend Docker Image
+      #   run: |
+      #     docker build -t ziptrrip-frontend ./Frontend
+
+      - name: Build Frontend Docker Image
+        run: |
+          docker build \
+            --build-arg VITE_APP_API_URL=${{ secrets.VITE_APP_API_URL }} \
+            -t ziptrrip-frontend ./Frontend
+
+      - name: Build Backend Docker Image
+        run: |
+          docker build -t ziptrrip-backend ./Backend
+
+      - name: Tag Docker Images
+        run: |
+          docker tag ziptrrip-frontend ${{ secrets.DOCKERHUB_USERNAME }}/ziptrrip-frontend:latest
+          docker tag ziptrrip-backend ${{ secrets.DOCKERHUB_USERNAME }}/ziptrrip-backend:latest
+
+      - name: Push Frontend Image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/ziptrrip-frontend:latest
+
+      - name: Push Backend Image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/ziptrrip-backend:latest
+
+      #################################################
+      # AWS Configuration and Terraform Setup
+      #################################################
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init
+
+      - name: Terraform Format Check
+        working-directory: terraform
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        working-directory: terraform
+        run: terraform validate
+
+      - name: Terraform Plan
+        working-directory: terraform
+        run: terraform plan -input=false -var="key_name=${{ secrets.EC2_KEY_NAME }}"
+
+      - name: Terraform Apply
+        working-directory: terraform
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -input=false -auto-approve -var="key_name=${{ secrets.EC2_KEY_NAME }}"
+
+      #################################################
+      # Get EC2 public IP address from Terraform output
+      #################################################
+
+      - name: Get EC2 Public IP
+        id: terraform
+        working-directory: terraform
+        run: |
+          echo "HOST=$(terraform output -raw public_ip)" >> $GITHUB_OUTPUT
+
+      #################################################
+      # Wait for SSH to be available on the EC2 instance
+      #################################################
+
+      - name: Wait for SSH
+        run: |
+          echo "Waiting for EC2 SSH..."
+
+          for i in {1..30}; do
+            if nc -z ${{ steps.terraform.outputs.HOST }} 22; then
+              echo "SSH is available!"
+              exit 0
+            fi
+
+            echo "Attempt $i: SSH not ready..."
+            sleep 10
+          done
+
+          echo "Timed out waiting for SSH."
+          exit 1
+
+      #################################################
+      # Deploy
+      #################################################
+
+      - name: Deploy to EC2
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ steps.terraform.outputs.HOST }}
+          username: ${{ secrets.AWS_USER }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+
+          script: |
+            cd ~/ziptrrip
+
+            docker compose pull
+
+            docker compose up -d
+
+            docker image prune -f
