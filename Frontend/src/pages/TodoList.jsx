@@ -11,19 +11,18 @@ const TodoList = () => {
 
   const navigate = useNavigate();
 
+  const fetchTodos = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/all-todos/`);
+      setTodos(res.data.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
-    const fetchTodos = async () => {
-      try {
-        const res = await axios.get(`${API_URL}/all-todos/`);
-
-        setTodos(res.data.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
     fetchTodos();
-  }, [todos]);
+  }, []);
 
   const handleToggle = async (id, completed) => {
     try {
@@ -45,7 +44,7 @@ const TodoList = () => {
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(`${API_URL}/delete-todo/${id}`);
-
+      setTodos((prev) => prev.filter((todo) => todo._id !== id));
       console.log(res.data.data);
       // setTodos((prev) => prev.filter((todo) => todo._id !== id));
     } catch (error) {
@@ -74,12 +73,15 @@ const TodoList = () => {
         description,
       });
 
+      setTitle("");
+      setDescription("");
+
       console.log(res);
+      setTodos((prev) => [...prev, res.data.data]);
     } catch (error) {
       console.log(error.message);
     }
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-100 to-slate-200 py-12 px-6">
@@ -192,11 +194,17 @@ const TodoList = () => {
                   </div>
 
                   <div className="flex justify-end gap-3 mt-7">
-                    <button  onClick={() => navigate(`/todos/${todo._id}`)} className="rounded-xl border border-gray-300 px-5 py-2 font-medium hover:bg-gray-100 transition">
+                    <button
+                      onClick={() => navigate(`/todos/${todo._id}`)}
+                      className="rounded-xl border border-gray-300 px-5 py-2 font-medium hover:bg-gray-100 transition"
+                    >
                       Details
                     </button>
 
-                    <button onClick={() => handleDelete(todo._id)} className="rounded-xl border border-red-500/50  hover:bg-red-600 text-red-500/90 hover:text-white px-5 py-2 font-medium transition">
+                    <button
+                      onClick={() => handleDelete(todo._id)}
+                      className="rounded-xl border border-red-500/50  hover:bg-red-600 text-red-500/90 hover:text-white px-5 py-2 font-medium transition"
+                    >
                       Delete
                     </button>
                   </div>
