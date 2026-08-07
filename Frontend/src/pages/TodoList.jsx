@@ -104,6 +104,7 @@ const TodoList = () => {
                 <input
                   type="text"
                   name="title"
+                  value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Learn Node.js..."
                   className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:ring-2 focus:ring-indigo-500"
@@ -118,6 +119,7 @@ const TodoList = () => {
                 <textarea
                   rows={5}
                   name="description"
+                  value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe your task..."
                   className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 outline-none resize-none transition focus:ring-2 focus:ring-indigo-500"
@@ -180,13 +182,12 @@ const TodoList = () => {
                     {/* Toggle */}
                     <label
                       className="relative inline-flex items-center cursor-pointer ml-6"
-                      onClick={() => handleToggle(todo._id, todo.completed)}
                     >
                       <input
                         type="checkbox"
-                        //   checked={todo.completed}
+                        checked={todo.completed}
+                        onChange={() => handleToggle(todo._id, todo.completed)}
                         className="sr-only peer"
-                        readOnly
                       />
 
                       <div className="w-14 h-8 bg-gray-300 rounded-full peer-checked:bg-green-500 transition-all after:content-[''] after:absolute after:top-[23px] after:left-1 after:bg-white after:w-6 after:h-6 after:rounded-full after:transition-all peer-checked:after:translate-x-6"></div>

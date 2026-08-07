@@ -8,7 +8,6 @@ const TodoDetail = () => {
   const [todo, setTodo] = useState();
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
-  const [newCompleted, setNewCompleted] = useState(false);
   const [editing, setEditing] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
@@ -20,7 +19,6 @@ const TodoDetail = () => {
         setTodo(res.data.data);
         setNewTitle(res.data.data.title);
         setNewDescription(res.data.data.description);
-        setNewCompleted(res.data.data.completed);
 
         // console.log(newTitle, newDescription, newCompleted);
         // console.log(res.data.data);
@@ -54,10 +52,6 @@ const TodoDetail = () => {
       }
       if (todo.description !== newDescription) {
         changedData.description = newDescription;
-      }
-
-      if (todo.completed !== newCompleted) {
-        changedData.completed = newCompleted;
       }
 
       if (Object.keys(changedData).length === 0) {
@@ -195,8 +189,11 @@ const TodoDetail = () => {
                 className={`rounded-xl border border-gray-300 px-6 py-3 font-medium hover:bg-gray-100 transition ${todo.completed ? "text-gray-400 cursor-not-allowed" : "text-gray-800"}`}
                 disabled={todo.completed}
                 onClick={() => {
-                  setEditing((prev) => !prev);
-                  editing && handleUpdateTodo();
+                   if (editing) {
+                    handleUpdateTodo();
+                  } else {
+                    setEditing(true);
+                  }
                 }}
               >
                 {editing ? "Save Changes" : "Edit Todo"}
